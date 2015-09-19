@@ -1,0 +1,10 @@
+doctype html
+html ng-app="app"
+  head
+    script data-main="javascripts/mpospelov" src="lib/requirejs/require.js"
+
+  body ng-controller="YourController as ctrl"
+    p {{ desc }}
+    p
+      | {{ something }}
+      a ng-href="https://github.com/{{ user }}"
