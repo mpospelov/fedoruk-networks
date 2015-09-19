@@ -9,29 +9,21 @@ var gulp = require('gulp'),
   gutil = require('gulp-util'),
   browserSync = require('browser-sync').create();
 
-function browserSyncInit(baseDir, files) {
-  browserSync.instance = browserSync.init(files, {
-    startPath: '/', server: { baseDir: baseDir }
-  });
-};
-
 gulp.task('bower', function () {
   return bower()
     .pipe(gulp.dest('.tmp/lib/'));
 });
 
-gulp.task('serve', ['coffee', 'sass'], function () {
+gulp.task('serve', ['slim','coffee', 'sass'], function () {
   browserSync.init({
-    server: './.tmp'
+    server: './.tmp',
+    reloadDelay: 2000
   });
 
-  gulp.watch(['./src/html/*.slim'], ['slim']);
-  gulp.watch(['./src/javascripts/*.coffee'], ['coffee']);
-  gulp.watch(['./src/stylesheets/*.scss'], ['sass']);
-});
-
-gulp.task('serve:dist', ['build'], function () {
-  browserSyncInit(paths.dist);
+  gulp.watch(['src/html/*.slim'], ['slim']);
+  gulp.watch(['src/javascripts/*.coffee'], ['coffee']);
+  gulp.watch(['src/stylesheets/*.scss'], ['sass']);
+  gulp.watch(["src/**/*"], browserSync.reload);
 });
 
 gulp.task('sass', function () {
@@ -67,8 +59,6 @@ gulp.task('coffee', function() {
     .pipe(gulp.dest('./.tmp/javascripts'))
 });
 
-gulp.task('watch', function () {
-});
 
 gulp.task('default', ['serve']);
 gulp.task('build', ['compress'])
