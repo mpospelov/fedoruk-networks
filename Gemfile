@@ -5,3 +5,5 @@ source "https://rubygems.org"
 
 gem "sinatra"
 gem 'ruby-fann'
+gem 'byebug'
+gem 'puma'

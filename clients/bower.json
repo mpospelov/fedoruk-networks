@@ -1,0 +1,16 @@
+{
+  "name": "clients",
+  "version": "0.0.0",
+  "homepage": "https://github.com/mpospelov/fedoruk-networks",
+  "authors": [
+    "Mikhail Pospelov <mixan946@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

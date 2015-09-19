@@ -1,6 +1,8 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    byebug (6.0.2)
+    puma (2.13.4)
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
@@ -15,6 +17,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  byebug
+  puma
   ruby-fann
   sinatra
 
