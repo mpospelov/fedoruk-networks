@@ -1,10 +1,14 @@
 doctype html
 html ng-app="app"
   head
-    script src="lib/angular/angular.js"
-  body ng-controller="YourController as ctrl"
-    p {{ desc }}
-    p
-      | {{ something }}
-      a ng-href="https://github.com/{{ user }}"
-
+    link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.css"
+    link rel="stylesheet" href="/lib/bootstrap/dist/js/bootstrap.js"
+    script src="/lib/angular/angular.js"
+    script src="/javascripts/mpospelov.js"
+  body ng-controller="FormController as ctrl"
+    .container
+      form name="form"
+        .form-group
+          label for="cabin" Класс каюты
+          select.form-control ng-model="ctrl.form.cabin" name="cabin"
+            option ng-repeat="cabin in ctrl.cabinClasses" value="{{$index}}" {{ cabin }}

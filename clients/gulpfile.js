@@ -4,17 +4,19 @@ var gulp = require('gulp'),
   uglify = require('gulp-uglify'),
   sourcemaps = require('gulp-sourcemaps'),
   sass = require('gulp-sass'),
+  transform = require('vinyl-transform'),
   coffee = require('gulp-coffee'),
   inject = require('gulp-inject'),
   gutil = require('gulp-util'),
+  coffeeify = require('gulp-coffeeify'),
   browserSync = require('browser-sync').create();
 
 gulp.task('bower', function () {
   return bower()
-    .pipe(gulp.dest('.tmp/lib/'));
+    .pipe(gulp.dest('.tmp/lib'));
 });
 
-gulp.task('serve', ['slim','coffee', 'sass'], function () {
+gulp.task('serve', ['bower', 'slim','coffee', 'sass'], function () {
   browserSync.init({
     server: './.tmp',
     reloadDelay: 2000
@@ -43,7 +45,7 @@ gulp.task('compress', function () {
 });
 
 gulp.task('slim', function () {
-  gulp.src("./src/html/*.slim")
+  gulp.src("./src/html/**/*.slim")
     .pipe(slim({
       pretty: true,
       options: "attr_list_delims={'(' => ')', '[' => ']'}"
@@ -53,10 +55,8 @@ gulp.task('slim', function () {
 
 gulp.task('coffee', function() {
   gulp.src('./src/javascripts/*.coffee')
-    .pipe(sourcemaps.init())
-    .pipe(coffee({bare: true}).on('error', gutil.log))
-    .pipe(sourcemaps.write())
-    .pipe(gulp.dest('./.tmp/javascripts'))
+    .pipe(coffee())
+    .pipe(gulp.dest('.tmp/javascripts'))
 });
 
 
