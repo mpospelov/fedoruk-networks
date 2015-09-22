@@ -36,6 +36,7 @@ class MyApp < Sinatra::Base
   end
 
   post '/mpospelov', provides: :json do
+    response.headers["Access-Control-Allow-Origin"] = "*"
     input = JSON.parse(request.body.read)
     { output: OUTPUTS[MPOSPELOV_NETWORK.run(input)] }.to_json
   end
@@ -56,6 +57,7 @@ class MyApp < Sinatra::Base
   end
 
   post '/akultisheva' do
+    response.headers["Access-Control-Allow-Origin"] = "*"
     input = JSON.parse(request.body.read)
     input.map!(&:to_f)
     { output: KOUTPUTS[AKULTYSHEVA_NETWORK.run(input)] }.to_json
