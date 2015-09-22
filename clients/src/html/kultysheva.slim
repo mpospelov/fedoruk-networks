@@ -4,11 +4,43 @@ html ng-app="app"
     link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.css"
     link rel="stylesheet" href="/lib/bootstrap/dist/js/bootstrap.js"
     script src="/lib/angular/angular.js"
-    script src="/javascripts/mpospelov.js"
+    script src="/javascripts/kultysheva.js"
   body ng-controller="FormController as ctrl"
     .container
-      form name="form"
+      form name="form" ng-submit="ctrl.submitForm()"
         .form-group
-          label for="cabin" Класс каюты
-          select.form-control ng-model="ctrl.form.cabin" name="cabin"
-            option ng-repeat="cabin in ctrl.cabinClasses" value="{{$index}}" {{ cabin }}
+          label for="cabin" Первый параметр
+          input.form-control ng-model="ctrl.$scope.formData[0]" name="param1" required=''
+          .alert.alert-danger role="alert" ng-show="form.param1.$error.required"
+            span.glyphicon.glyphicon-exclamation-sign aria-hidden="true"
+            span.sr-only Error:
+            | Установите первый параметр!
+
+        .form-group
+          label for="cabin" Второй параметр
+          input.form-control ng-model="ctrl.$scope.formData[1]" name="param2" required=''
+          .alert.alert-danger role="alert" ng-show="form.param2.$error.required"
+            span.glyphicon.glyphicon-exclamation-sign aria-hidden="true"
+            span.sr-only Error:
+            | Установите второй параметр!
+
+        .form-group
+          label for="cabin" Третий параметр
+          input.form-control ng-model="ctrl.$scope.formData[2]" name="param3" required=''
+          .alert.alert-danger role="alert" ng-show="form.param3.$error.required"
+            span.glyphicon.glyphicon-exclamation-sign aria-hidden="true"
+            span.sr-only Error:
+            | Установите третий параметр!
+
+        .form-group
+          label for="cabin" Четвертый параметр
+          input.form-control ng-model="ctrl.$scope.formData[3]" name="param4" required=''
+          .alert.alert-danger role="alert" ng-show="form.param4.$error.required"
+            span.glyphicon.glyphicon-exclamation-sign aria-hidden="true"
+            span.sr-only Error:
+            | Установите четвертый параметр!
+
+        button.btn.btn-success type="submit" Отправить
+      .alert.notice() {{ ctrl.$scope.responseValue }}
+      img ng-src="{{ ctrl.$scope.imageUrl.length && ctrl.$scope.imageUrl}}"
+

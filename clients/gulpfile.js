@@ -16,7 +16,7 @@ gulp.task('bower', function () {
     .pipe(gulp.dest('.tmp/lib'));
 });
 
-gulp.task('serve', ['bower', 'slim','coffee', 'sass'], function () {
+gulp.task('serve', ['bower', 'slim','coffee', 'sass', 'images_copy'], function () {
   browserSync.init({
     server: './.tmp',
     reloadDelay: 2000
@@ -25,8 +25,14 @@ gulp.task('serve', ['bower', 'slim','coffee', 'sass'], function () {
   gulp.watch(['src/html/*.slim'], ['slim']);
   gulp.watch(['src/javascripts/*.coffee'], ['coffee']);
   gulp.watch(['src/stylesheets/*.scss'], ['sass']);
+  gulp.watch(['src/images/**/*'], ['images_copy'])
   gulp.watch(["src/**/*"], browserSync.reload);
 });
+
+gulp.task('images_copy', function () {
+  gulp.src('src/images/**/*')
+    .pipe(gulp.dest('./.tmp/images'))
+})
 
 gulp.task('sass', function () {
   gulp.src('./src/stylesheets/**/*.scss')
@@ -61,4 +67,7 @@ gulp.task('coffee', function() {
 
 
 gulp.task('default', ['serve']);
-gulp.task('build', ['compress'])
+gulp.task('build',['bower', 'slim','coffee', 'sass', 'images_copy'], function() {
+  gulp.src('.tmp/**/*').
+    pipe(gulp.dest('./build'))
+})
