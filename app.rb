@@ -16,17 +16,17 @@ class MyApp < Sinatra::Base
     0 => {
       number: 0,
       name: "Iris Setosa",
-      url: "/images/iris_setosa.jpg"
+      url: "images/iris_setosa.jpg"
     },
     1 => {
       number: 1,
       name: "Iris Versicolour",
-      url: "/images/iris_versicolor.jpg"
+      url: "images/iris_versicolor.jpg"
     },
     2 => {
       number: 2,
       name: "Iris Virginica",
-      url: "/images/iris_virginica.jpg"
+      url: "images/iris_virginica.jpg"
     }
   }
 
