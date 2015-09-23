@@ -35,7 +35,7 @@ class MyApp < Sinatra::Base
     enable :cross_origin
   end
 
-  post '/mpospelov', provides: :json do
+  get '/mpospelov' do
     response.headers["Access-Control-Allow-Origin"] = "*"
     input = JSON.parse(request.body.read)
     { output: OUTPUTS[MPOSPELOV_NETWORK.run(input)] }.to_json
@@ -56,7 +56,7 @@ class MyApp < Sinatra::Base
     result.to_json
   end
 
-  post '/akultisheva' do
+  get '/akultisheva' do
     response.headers["Access-Control-Allow-Origin"] = "*"
     input = JSON.parse(request.body.read)
     input.map!(&:to_f)
