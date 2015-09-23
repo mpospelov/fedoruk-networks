@@ -9,8 +9,8 @@ class MyApp < Sinatra::Base
   MPOSPELOV_NETWORK = TitanicAnalyze.new(File.open('train_data/pospelov.csv').read)
   AKULTYSHEVA_NETWORK = FlowerAnalyze.new(File.open('train_data/kultysheva.csv').read)
   OUTPUTS = {
-    0 => "Погиб",
-    1 => "Выжил"
+    0 => "Dead",
+    1 => "Alive"
   }
   KOUTPUTS = {
     0 => {
