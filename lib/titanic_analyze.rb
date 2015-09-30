@@ -1,6 +1,11 @@
 require 'ruby-fann'
 require 'csv'
 
+DEAD_STATE = {
+  0 => [1,0],
+  1 => [0,1],
+}
+
 class TitanicAnalyze
   def initialize(training_data_csv)
     data = CSV.new(
@@ -8,39 +13,34 @@ class TitanicAnalyze
       headers: true,
       converters: [:all, :blank_to_nil]
     ).to_a.map{|r| r.to_hash}
-    inputs = data.map{|el| hash_to_input(el) }.compact
-    outputs = data.map{|el| [el["output"].to_i] }.compact
-    train = RubyFann::TrainData.new(
-      inputs: inputs,
-      desired_outputs: outputs
-    )
-    @fann = RubyFann::Standard.new(
-      num_inputs: 3,
-      hidden_neurons: [2,3],
-      num_outputs: 1
-    )
-    # @fann.set_activation_function_layer(:sigmoid, 0)
-    @fann.set_activation_function_hidden(:sigmoid)
-    @fann.set_activation_function_output(:linear)
-    @fann.set_train_stop_function(:mse)
+    inputs = data.map{|el| hash_to_input(el) }
+    
+    @max0, @min0 = inputs.max_by{|i| i[0]}[0], inputs.min_by{|i| i[0]}[0]
+    @max1, @min1 = inputs.max_by{|i| i[1]}[1], inputs.min_by{|i| i[1]}[1]
+    @max2, @min2 = inputs.max_by{|i| i[2]}[2], inputs.min_by{|i| i[2]}[2]
+    outputs = data.map{|el| DEAD_STATE[el["output"].to_i] }
+    @network = NeuralNet.new([3, 2, 2])
 
-
-    @fann.train_on_data(train, 1000, 10, 0.1)
+    @network.train(
+      inputs,
+      outputs
+    )
   end
 
   def run(el)
-    result = @fann.run(hash_to_input(el))[0]
-    puts result
-    result.round
+    input = hash_to_input(el)
+    result = @network.run(input)
+    puts result.to_s
+    result.index result.max
   end
 
   private
 
   def hash_to_input(hash)
     [
-      hash["cabin"].to_f / 3,
-      hash["age"].to_f / 2,
-      hash["sex"].to_f / 2
+      hash["cabin"].to_f,
+      hash["age"].to_f,
+      hash["sex"].to_f
     ]
   end
 
