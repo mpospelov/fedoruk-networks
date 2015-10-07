@@ -1,8 +1,12 @@
 require 'byebug'
 require 'logger'
+require './lib/layer.rb'
+require './lib/neuron.rb'
+require './lib/connection.rb'
+
 NETWORK_LOG = Logger.new('logfile.log')
 
-class Network
+class NeuralNet
   attr_reader :layers
 
   def initialize(form)
@@ -29,7 +33,7 @@ class Network
     end
   end
 
-  def single_train_error(inputs:, outputs:)
+  def single_train_error(inputs, outputs)
     total_mse = 0
 
     inputs.each_with_index do |input, i|
@@ -53,7 +57,7 @@ class Network
   end
 
   def calculate_training_error(outputs, expected_outputs)
-    outputs.map.with_index do |output, i| 
+    outputs.map.with_index do |output, i|
       output - expected_outputs[i]
     end
   end
@@ -75,7 +79,7 @@ class Network
       raise "The input size should be #{input_layer.neurons.count}"
     end
     @input_layer.run(input)
-    
+
     layers.each_with_index do |layer, i|
       next if @input_layer == layer
       layer.run_on_prev_layer_outputs(layers[i-1])
@@ -85,8 +89,8 @@ class Network
 
   def inspect
     result = [
-      "\n#Network", 
-      "\tlayers_count = #{@layers.count}", 
+      "\n#Network",
+      "\tlayers_count = #{@layers.count}",
       "\tlayers info:"
     ] << @layers.map{|l| l.to_hash.to_s }.join("\n")
     result.join("\n")

@@ -3,15 +3,15 @@ class NeuralNet
   attr_accessor :weights, :weight_update_values
 
   DEFAULT_TRAINING_OPTIONS = {
-    max_iterations:   1_000,
-    error_threshold:  0.01
+    :max_iterations =>   1_000,
+    :error_threshold =>  0.01
   }
 
-  def initialize shape
+  def initialize(shape)
     @shape = shape
   end
 
-  def run input
+  def run(input)
     # Input to this method represents the output of the first layer (i.e., the input layer)
     @outputs = [input]
     set_initial_weight_values if @weights.nil?
@@ -23,7 +23,7 @@ class NeuralNet
 
       @outputs[layer] = @weights[layer].map do |neuron_weights|
         # inputs to this neuron are the neuron outputs from the source layer times weights
-        inputs = neuron_weights.map.with_index do |weight, i| 
+        inputs = neuron_weights.map.with_index do |weight, i|
           source_output = source_outputs[i] || 1 # if no output, this is the bias neuron
           weight * source_output
         end
@@ -38,7 +38,7 @@ class NeuralNet
     @outputs[output_layer]
   end
 
-  def train inputs, expected_outputs, opts = {}
+  def train(inputs, expected_outputs, opts = {})
     opts = DEFAULT_TRAINING_OPTIONS.merge(opts)
     error_threshold, log_every = opts[:error_threshold], opts[:log_every]
     iteration, error = 0, 0
@@ -51,7 +51,7 @@ class NeuralNet
       iteration += 1
 
       error = train_on_batch(inputs, expected_outputs)
-      
+
       if log_every && (iteration % log_every == 0)
         puts "[#{iteration}] #{(error * 100).round(2)}% mse"
       end
@@ -59,12 +59,16 @@ class NeuralNet
       break if error_threshold && (error < error_threshold)
     end
 
-    {error: error.round(5), iterations: iteration, below_error_threshold: (error < error_threshold)}
+    {
+      :error => error.round(5),
+      :iterations => iteration,
+      :below_error_threshold => (error < error_threshold)
+    }
   end
 
   private
 
-    def train_on_batch inputs, expected_outputs
+    def train_on_batch(inputs, expected_outputs)
       total_mse = 0
 
       set_gradients_to_zeroes
@@ -81,13 +85,13 @@ class NeuralNet
       total_mse / inputs.length.to_f # average mean squared error for batch
     end
 
-    def calculate_training_error ideal_output
-      @outputs[output_layer].map.with_index do |output, i| 
+    def calculate_training_error(ideal_output)
+      @outputs[output_layer].map.with_index do |output, i|
         output - ideal_output[i]
       end
     end
 
-    def update_gradients training_error
+    def update_gradients(training_error)
       deltas = {}
       # Starting from output layer and working backwards, backpropagating the training error
       output_layer.downto(1).each do |layer|
@@ -99,7 +103,7 @@ class NeuralNet
           else
             target_layer = layer + 1
 
-            weighted_target_deltas = deltas[target_layer].map.with_index do |target_delta, target_neuron| 
+            weighted_target_deltas = deltas[target_layer].map.with_index do |target_delta, target_neuron|
               target_weight = @weights[target_layer][target_neuron][neuron]
               target_delta * target_weight
             end
@@ -186,7 +190,7 @@ class NeuralNet
 
     def set_initial_weight_values
       # Initialize all weights to random float value
-      @weights = build_connection_matrixes { rand(-0.5..0.5) }  
+      @weights = build_connection_matrixes { rand(-0.5..0.5) }
 
       # Update weights for first hidden layer (Nguyen-Widrow method)
       # This is a bit obscure, and not entirely necessary, but it should help the network train faster
@@ -229,7 +233,7 @@ class NeuralNet
 
     ZERO_TOLERANCE = Math.exp(-16)
 
-    def sign x
+    def sign(x)
       if x > ZERO_TOLERANCE
         1
       elsif x < -ZERO_TOLERANCE

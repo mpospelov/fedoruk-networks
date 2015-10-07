@@ -1,9 +1,5 @@
 require 'ruby-fann'
 require 'csv'
-require './lib/network.rb'
-require './lib/layer.rb'
-require './lib/neuron.rb'
-require './lib/connection.rb'
 require './lib/neural_net.rb'
 
 FLOWERS = {
@@ -28,7 +24,7 @@ class FlowerAnalyze
         normalize(input[0], @max0, @min0),
         normalize(input[1], @max1, @min1),
         normalize(input[2], @max2, @min2),
-        normalize(input[3], @max3, @min3) 
+        normalize(input[3], @max3, @min3)
       ]
     end
     outputs = data.map{|el| FLOWERS[el[4].to_i] }
@@ -36,7 +32,7 @@ class FlowerAnalyze
     @network.train(
       inputs,
       outputs,
-      error_threshold: 0.01, 
+      error_threshold: 0.01,
       max_iterations: 1_000,
       log_every: 100
     )
@@ -47,14 +43,14 @@ class FlowerAnalyze
       normalize(input[0], @max0, @min0),
       normalize(input[1], @max1, @min1),
       normalize(input[2], @max2, @min2),
-      normalize(input[3], @max3, @min3) 
+      normalize(input[3], @max3, @min3)
     ]
     result = @network.run(normalized_input)
     puts result.to_s
     result.index result.max
   end
 
-  def normalize(val, high, low)  
+  def normalize(val, high, low)
     (val - low) / (high - low)
   end
 end
